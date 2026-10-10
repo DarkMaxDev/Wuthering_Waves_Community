@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <div className="space-y-14">
       {/* Portada Eclipse: imagen de fondo opcional + anillos de resonancia (solo CSS) */}
-      <section className="relative overflow-hidden rounded-2xl border border-mist bg-gradient-to-b from-[#131417] to-night px-6 py-16 sm:px-12 sm:py-28">
+      <section className="relative overflow-hidden rounded-2xl border border-mist bg-gradient-to-b from-[#000000] to-night px-6 py-16 sm:px-12 sm:py-28">
         {SITE.heroImage && (
           <>
             <div aria-hidden className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${SITE.heroImage}")` }} />
@@ -26,17 +26,6 @@ export default async function Home() {
             <div aria-hidden className="absolute inset-0" style={{ background: `linear-gradient(90deg, rgba(13,14,16,${o}) 0%, rgba(13,14,16,${o * 0.35}) 100%)` }} />
           </>
         )}
-        <div aria-hidden className="pointer-events-none absolute -right-40 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 opacity-50 sm:-right-10 sm:opacity-100">
-          <div className="absolute inset-0 animate-drift bg-[radial-gradient(circle,rgba(201,205,211,0.22),transparent_65%)]" />
-          {[0.2, 0.36, 0.54, 0.76, 1].map((s) => (
-            <span key={s} className="absolute rounded-full border border-platinum-dark/40" style={{ inset: `${((1 - s) / 2) * 100}%` }} />
-          ))}
-          {[0, 2, 4].map((d) => (
-            <span key={d} className="absolute inset-[30%] animate-ring rounded-full border border-graphite/50" style={{ animationDelay: `${d}s` }} />
-          ))}
-          <span className="absolute inset-[42%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.6),transparent_70%)]" />
-        </div>
-
         <div className="relative z-10 max-w-2xl">
           <h1 className="animate-rise bg-gradient-to-b from-white to-slate2 bg-clip-text text-5xl leading-[1.05] text-transparent sm:text-7xl">
             Cada eco cuenta. Construye a tu Resonador con criterio.
