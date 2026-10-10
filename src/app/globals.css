@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { @apply bg-night text-ink antialiased; color-scheme: dark; }
+  body { @apply min-h-screen font-sans; }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-graphite; }
+  select option { background: #16171a; color: #f2f3f5; }
+}
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-md border border-ink bg-ink px-4 py-2 text-sm font-medium text-night transition duration-200 hover:-translate-y-0.5 hover:bg-white active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0; }
+  .btn-ghost { @apply border-[#4a4d54] bg-transparent text-ink hover:bg-white/10; }
+  .input { @apply w-full rounded-md border border-platinum bg-panel px-3 py-2 text-sm text-ink placeholder:text-platinum-dark focus:border-slate2 focus:outline-none; }
+  .card { @apply rounded-lg border border-mist bg-panel p-5; }
+  .card-lift { @apply transition duration-300 hover:-translate-y-1 hover:border-platinum-dark hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.8)]; }
+  .chip { @apply inline-flex items-center rounded-full border border-[#4a4d54] bg-[#24262a] px-2.5 py-0.5 text-xs text-graphite; }
+}
+/* Filtros activos (personajes y noticias): fondo claro con texto oscuro */
+.chip.bg-ink { color: #0d0e10; }
+
+/* Respeta a quien pide menos movimiento en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
