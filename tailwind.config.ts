@@ -1,8 +1,5 @@
 import type { Config } from "tailwindcss";
 
-// Tema Eclipse: los nombres se mantienen y los valores se invierten a modo oscuro.
-// ink = texto principal (claro) · mist = bordes · fog = superficies sutiles
-// night = fondo de la página · panel = fondo de tarjetas
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
@@ -16,13 +13,12 @@ const config: Config = {
         night: "#0d0e10",
         panel: "#16171a",
         platinum: { DEFAULT: "#3a3d43", dark: "#7d838c", light: "#34373c" },
-        red: { 700: "#f87171" }, // errores legibles sobre fondo oscuro
+        red: { 700: "#f87171" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "Georgia", "serif"],
       },
-      // Solo transform/opacity: baratas para el navegador
       keyframes: {
         rise: { "0%": { opacity: "0", transform: "translateY(14px)" }, "100%": { opacity: "1", transform: "none" } },
         ring: { "0%": { transform: "scale(0.4)", opacity: "0.6" }, "100%": { transform: "scale(1.6)", opacity: "0" } },
