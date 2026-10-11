@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { connectDB } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { plain } from "@/lib/utils";
@@ -10,6 +11,31 @@ import CharacterImage from "@/components/CharacterImage";
 import BuildActions from "@/components/BuildActions";
 
 export const dynamic = "force-dynamic";
+
+// Generación de metadatos dinámicos por personaje para SEO
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  await connectDB();
+  const raw = await Character.findOne({ slug }).lean();
+
+  if (!raw) {
+    return {
+      title: "Personaje no encontrado | Wuthering Waves Community",
+    };
+  }
+
+  const c: any = plain(raw);
+
+  return {
+    title: `Build y Guía de ${c.name} - Wuthering Waves`,
+    description: c.description || `Descubre las mejores builds, ecos, estadísticas prioritarias y guías para ${c.name} en Wuthering Waves.`,
+    openGraph: {
+      title: `Build y Guía de ${c.name} - Wuthering Waves`,
+      description: c.description || `Builds recomendadas para ${c.name}.`,
+      images: c.imageUrl ? [{ url: c.imageUrl }] : [],
+    },
+  };
+}
 
 export default async function CharacterPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
