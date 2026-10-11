@@ -9,7 +9,7 @@ const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["500", "600", 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wuthering-waves-community.onrender.com"),
   title: {
-    default: "Wuthering_Community — Builds, ecos y comunidad",
+    default: "Wuthering Waves Community",
     template: "%s | Wuthering_Community",
   },
   description: "Optimiza tus personajes de Wuthering Waves, consulta sets de ecos y consulta a la comunidad.",
