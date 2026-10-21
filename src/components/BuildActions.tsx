@@ -4,8 +4,13 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import BuildForm from "./BuildForm";
 
-/** Botones Editar / Eliminar de una build (se muestran solo al autor o a un admin). */
-export default function BuildActions({ characterId, build }: { characterId: string; build: any }) {
+export default function BuildActions({
+  characterId,
+  build,
+}: {
+  characterId: string;
+  build: any;
+}) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
 
@@ -16,11 +21,22 @@ export default function BuildActions({ characterId, build }: { characterId: stri
     router.refresh();
   }
 
-  if (editing) return <BuildForm characterId={characterId} build={build} onDone={() => setEditing(false)} />;
+  if (editing)
+    return (
+      <BuildForm
+        characterId={characterId}
+        build={build}
+        onDone={() => setEditing(false)}
+      />
+    );
   return (
     <div className="flex gap-2">
-      <button className="btn btn-ghost" onClick={() => setEditing(true)}><Pencil size={16} /> Editar</button>
-      <button className="btn btn-ghost" onClick={remove}><Trash2 size={16} /> Eliminar</button>
+      <button className="btn btn-ghost" onClick={() => setEditing(true)}>
+        <Pencil size={16} /> Editar
+      </button>
+      <button className="btn btn-ghost" onClick={remove}>
+        <Trash2 size={16} /> Eliminar
+      </button>
     </div>
   );
 }

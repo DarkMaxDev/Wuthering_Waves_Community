@@ -6,8 +6,14 @@ import Post from "@/models/Post";
 export const GET = handle(async (req: Request) => {
   const category = new URL(req.url).searchParams.get("category");
   await connectDB();
-  const news = await Post.find({ kind: "news", ...(category ? { category } : {}) })
-    .populate("author", "username").sort({ createdAt: -1 }).limit(50).lean();
+  const news = await Post.find({
+    kind: "news",
+    ...(category ? { category } : {}),
+  })
+    .populate("author", "username")
+    .sort({ createdAt: -1 })
+    .limit(50)
+    .lean();
   return json({ news });
 });
 

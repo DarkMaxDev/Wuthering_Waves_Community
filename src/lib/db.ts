@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-/**
- * Conexión a MongoDB con caché global para evitar abrir
- * múltiples conexiones durante el hot-reload de desarrollo.
- */
-type Cache = { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null };
+type Cache = {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+};
 const g = globalThis as unknown as { _mongoose?: Cache };
-const cache: Cache = g._mongoose ?? (g._mongoose = { conn: null, promise: null });
+const cache: Cache =
+  g._mongoose ?? (g._mongoose = { conn: null, promise: null });
 
 export async function connectDB() {
   const uri = process.env.MONGODB_URI;

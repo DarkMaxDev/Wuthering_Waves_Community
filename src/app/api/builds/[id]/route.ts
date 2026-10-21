@@ -7,7 +7,6 @@ import Comment from "@/models/Comment";
 
 type Ctx = { params: Promise<{ id: string }> };
 
-/** Carga la build y comprueba que el usuario sea su autor o admin. */
 async function loadOwned(id: string) {
   const [user, deny] = await requireUser();
   if (!user) return { error: deny };
@@ -20,18 +19,16 @@ async function loadOwned(id: string) {
   return { build };
 }
 
-/** PATCH /api/builds/:id — actualiza la build (autor o admin). */
 export const PATCH = handle(async (req: Request, { params }: Ctx) => {
   const { id } = await params;
   const { build, error } = await loadOwned(id);
   if (!build) return error!;
   const data = buildSchema.omit({ character: true }).parse(await req.json());
-  build.set(data); // el personaje, el autor y el flag "oficial" no cambian
+  build.set(data);
   await build.save();
   return json({ build });
 });
 
-/** DELETE /api/builds/:id — elimina la build y sus comentarios (autor o admin). */
 export const DELETE = handle(async (_req: Request, { params }: Ctx) => {
   const { id } = await params;
   const { build, error } = await loadOwned(id);

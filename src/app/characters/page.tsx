@@ -4,16 +4,16 @@ import { connectDB } from "@/lib/db";
 import { cn, plain } from "@/lib/utils";
 import Character from "@/models/Character";
 import { CharacterCard } from "@/components/Cards";
+import SearchInput from "@/components/SearchInput";
 
 export const dynamic = "force-dynamic";
 
 const ELEMENTS = ["Fusion", "Glacio", "Electro", "Aero", "Spectro", "Havoc"];
 
-// Generación de metadatos dinámicos según el elemento seleccionado
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ element?: string }>;
+  searchParams: Promise<{ element?: string; q?: string }>;
 }): Promise<Metadata> {
   const { element } = await searchParams;
   const isElementValid = ELEMENTS.includes(element ?? "");
@@ -39,36 +39,65 @@ export async function generateMetadata({
 export default async function Characters({
   searchParams,
 }: {
-  searchParams: Promise<{ element?: string }>;
+  searchParams: Promise<{ element?: string; q?: string }>;
 }) {
-  const { element } = await searchParams;
+  const { element, q } = await searchParams;
   await connectDB();
+
+  // Construcción del query dinámico para MongoDB
+  const query: Record<string, any> = {};
+
+  if (ELEMENTS.includes(element ?? "")) {
+    query.element = element;
+  }
+
+  if (q && q.trim() !== "") {
+    // Búsqueda insensible a mayúsculas/minúsculas por el nombre
+    query.name = { $regex: q.trim(),$options: "i" };
+  }
+
   const chars = plain(
-    await Character.find(ELEMENTS.includes(element ?? "") ? { element } : {})
+    await Character.find(query)
       .sort({ rarity: -1, name: 1 })
-      .lean()
+      .lean(),
   );
 
   return (
     <div>
       <h1 className="mb-4 text-5xl">Personajes</h1>
-      <div className="mb-6 flex flex-wrap gap-2">
-        <Link
-          href="/characters"
-          className={cn("chip", !element && "border-ink bg-ink text-white")}
-        >
-          Todos
-        </Link>
-        {ELEMENTS.map((e) => (
+
+      {/* Contenedor con la barra de búsqueda y los filtros de elementos */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <SearchInput placeholder="Buscar personaje por nombre..." />
+
+        <div className="flex flex-wrap gap-2">
           <Link
-            key={e}
-            href={`/characters?element=${e}`}
-            className={cn("chip", element === e && "border-ink bg-ink text-white")}
+            href={q ? `/characters?q=${encodeURIComponent(q)}` : "/characters"}
+            className={cn("chip", !element && "border-ink bg-ink text-white")}
           >
-            {e}
+            Todos
           </Link>
-        ))}
+          {ELEMENTS.map((e) => {
+            const href = q
+              ? `/characters?element=${e}&q=${encodeURIComponent(q)}`
+              : `/characters?element=${e}`;
+
+            return (
+              <Link
+                key={e}
+                href={href}
+                className={cn(
+                  "chip",
+                  element === e && "border-ink bg-ink text-white",
+                )}
+              >
+                {e}
+              </Link>
+            );
+          })}
+        </div>
       </div>
+
       {chars.length ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {chars.map((c: any) => (

@@ -13,6 +13,14 @@ export const POST = handle(async (req: Request) => {
   if (!user || !(await bcrypt.compare(password, user.passwordHash)))
     return fail("Credenciales incorrectas", 401);
 
-  await setAuthCookie(signToken({ id: String(user._id), username: user.username, role: user.role }));
-  return json({ user: { id: user._id, username: user.username, role: user.role } });
+  await setAuthCookie(
+    signToken({
+      id: String(user._id),
+      username: user.username,
+      role: user.role,
+    }),
+  );
+  return json({
+    user: { id: user._id, username: user.username, role: user.role },
+  });
 });

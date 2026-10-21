@@ -16,7 +16,7 @@ import { CHARACTERS, OFFICIAL_BUILDS } from "../src/data/characters";
 
 async function main() {
   await connectDB();
-  const email = (process.env.ADMIN_EMAIL ?? "admin@example.com").toLowerCase();
+  const email = (process.env.ADMIN_EMAIL).toLowerCase();
   let admin = await User.findOne({ email });
   if (!admin)
     admin = await User.create({ username: "WuwaHub", email, role: "admin", passwordHash: await bcrypt.hash("ChangeMe123!", 12) });

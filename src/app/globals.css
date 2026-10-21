@@ -17,10 +17,8 @@
   .card-lift { @apply transition duration-300 hover:-translate-y-1 hover:border-platinum-dark hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.8)]; }
   .chip { @apply inline-flex items-center rounded-full border border-[#4a4d54] bg-[#24262a] px-2.5 py-0.5 text-xs text-graphite; }
 }
-/* Filtros activos (personajes y noticias): fondo claro con texto oscuro */
 .chip.bg-ink { color: #0d0e10; }
 
-/* Respeta a quien pide menos movimiento en su sistema */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

@@ -9,5 +9,14 @@ export default function LogoutButton() {
     router.push("/");
     router.refresh();
   }
-  return <button onClick={logout} className="btn btn-ghost" aria-label="Cerrar sesión"><LogOut size={16} /><span className="hidden sm:inline">Salir</span></button>;
+  return (
+    <button
+      onClick={logout}
+      className="btn btn-ghost"
+      aria-label="Cerrar sesión"
+    >
+      <LogOut size={16} />
+      <span className="hidden sm:inline">Salir</span>
+    </button>
+  );
 }
