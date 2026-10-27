@@ -6,7 +6,7 @@ import Post from "@/models/Post";
 import { PostCard } from "@/components/Cards";
 
 export const dynamic = "force-dynamic";
-const CATS = ["personaje", "banner", "evento", "colaboración", "reseña"];
+const CATS = ["personaje", "banner", "evento", "colaboración", "reseña","Proxima Version"];
 
 export default async function News({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const { category } = await searchParams;

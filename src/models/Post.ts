@@ -11,6 +11,11 @@ const PostSchema = new Schema(
     title: { type: String, required: true },
     body: { type: String, required: true },
     category: { type: String, default: "general" },
+    videoUrl: { 
+      type: String, 
+      trim: true,
+      default: ""
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -20,4 +25,5 @@ const PostSchema = new Schema(
   },
   { timestamps: true },
 );
+
 export default models.Post || model("Post", PostSchema);

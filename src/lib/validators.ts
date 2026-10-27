@@ -40,16 +40,30 @@ export const buildSchema = z.object({
     .max(8),
   weapon: z.string().trim().max(60).default(""),
 });
+
 export const commentSchema = z.object({
   targetType: z.enum(["build", "post"]),
   target: objectId,
   body: z.string().trim().min(2, "Comentario demasiado corto").max(1500),
+  // Opcional: por si en el futuro quieres añadir GIFs o links multimedia en comentarios
+  mediaUrl: z.string().trim().max(500).default(""),
 });
+
 export const postSchema = z.object({
   kind: z.enum(["news", "question"]),
   title: z.string().trim().min(5, "Título: mínimo 5 caracteres").max(120),
   body: z.string().trim().min(10, "Contenido: mínimo 10 caracteres").max(8000),
   category: z.string().trim().max(30).default("general"),
+  // Nuevo campo para la URL del video de YouTube o X
+  videoUrl: z
+    .string()
+    .trim()
+    .max(500)
+    .refine(
+      (v) => v === "" || /^https?:\/\//i.test(v),
+      "El enlace debe ser una URL válida que empiece con http:// o https://",
+    )
+    .default(""),
 });
 
 export const ELEMENTS = [

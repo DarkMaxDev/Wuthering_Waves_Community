@@ -25,7 +25,14 @@ export function CharacterCard({ c }: { c: any }) {
 export function PostCard({ p, base }: { p: any; base: "news" | "community" }) {
   return (
     <Link href={`/${base}/${p._id}`} className="card card-lift block">
-      <span className="chip mb-2">{p.category}</span>
+      <div className="flex items-center justify-between mb-2">
+        <span className="chip">{p.category}</span>
+        {p.videoUrl && (
+          <span className="text-xs bg-slate-800 text-slate-200 px-2 py-0.5 rounded flex items-center gap-1 font-medium">
+            🎬 Video
+          </span>
+        )}
+      </div>
       <h3 className="text-xl">{p.title}</h3>
       <p className="mt-1 line-clamp-2 text-sm text-slate2">{p.body}</p>
       <p className="mt-3 text-xs text-slate2">

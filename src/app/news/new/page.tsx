@@ -6,5 +6,5 @@ export default async function NewNews() {
   const user = await getSession();
   if (user?.role !== "admin") redirect("/news");
   return (<div><h1 className="mb-6 text-5xl">Publicar noticia</h1>
-    <PostForm kind="news" categories={["personaje", "banner", "evento", "colaboración", "reseña"]} /></div>);
+    <PostForm kind="news" categories={["personaje", "banner", "evento", "colaboración", "reseña","Proxima Version"]} /></div>);
 }

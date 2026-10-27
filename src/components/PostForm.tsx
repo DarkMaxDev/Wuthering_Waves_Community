@@ -30,17 +30,29 @@ export default function PostForm({
   return (
     <form onSubmit={onSubmit} className="card max-w-2xl space-y-3">
       <input name="title" className="input" placeholder="Título" required />
+      
       <select name="category" className="input">
         {categories.map((c) => (
           <option key={c}>{c}</option>
         ))}
       </select>
+
+      {kind === "news" && (
+        <input
+          name="videoUrl"
+          type="url"
+          className="input"
+          placeholder="URL del video (YouTube o X / Twitter) - Opcional"
+        />
+      )}
+
       <textarea
         name="body"
         className="input min-h-40"
         placeholder="Describe tu duda o escribe el artículo…"
         required
       />
+      
       {error && <p className="text-sm text-red-700">{error}</p>}
       <button className="btn">Publicar</button>
     </form>
