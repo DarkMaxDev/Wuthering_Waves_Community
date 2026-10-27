@@ -72,7 +72,7 @@ export default function CommentSection({
     router.refresh();
   }
 
-  // Función para eliminar comentario
+  // Función para eliminar comentario corregida
   async function handleRemove(commentId: string) {
     if (!confirm("¿Seguro que deseas eliminar este comentario?")) return;
 
