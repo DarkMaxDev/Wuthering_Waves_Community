@@ -45,8 +45,8 @@ export const commentSchema = z.object({
   targetType: z.enum(["build", "post"]),
   target: objectId,
   body: z.string().trim().min(2, "Comentario demasiado corto").max(1500),
-  // Opcional: por si en el futuro quieres añadir GIFs o links multimedia en comentarios
   mediaUrl: z.string().trim().max(500).default(""),
+  mediaType: z.enum(["", "image", "gif", "youtube", "twitter"]).default(""),
 });
 
 export const postSchema = z.object({
