@@ -6,16 +6,25 @@ import { Trash2, Image as ImageIcon, Search } from "lucide-react";
 
 export default function CommentSection({ 
   postId, 
-  comments, 
+  targetType = "post",
+  target,
+  comments = [], 
+  canPost = true,
   meId, 
   isAdmin = false 
 }: { 
-  postId: string; 
-  comments: any[]; 
+  postId?: string; 
+  targetType?: string;
+  target?: string;
+  comments?: any[]; 
+  canPost?: boolean;
   meId?: string; 
   isAdmin?: boolean; 
 }) {
   const router = useRouter();
+  const commentTarget = postId || target;
+  const currentTargetType = postId ? "post" : targetType;
+
   const [body, setBody] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [mediaType, setMediaType] = useState<"" | "image" | "gif" | "youtube" | "twitter">("");
@@ -43,6 +52,7 @@ export default function CommentSection({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!commentTarget) return;
     setLoading(true);
     setError("");
 
@@ -50,8 +60,8 @@ export default function CommentSection({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        targetType: "post",
-        target: postId,
+        targetType: currentTargetType,
+        target: commentTarget,
         body,
         mediaUrl,
         mediaType,
@@ -72,7 +82,6 @@ export default function CommentSection({
     router.refresh();
   }
 
-  // Función para eliminar comentario corregida
   async function handleRemove(commentId: string) {
     if (!confirm("¿Seguro que deseas eliminar este comentario?")) return;
 
@@ -89,91 +98,95 @@ export default function CommentSection({
     <section className="mt-10 border-t border-slate-800 pt-6 max-w-2xl">
       <h3 className="text-2xl font-bold mb-4">Comentarios ({comments.length})</h3>
 
-      <form onSubmit={handleSubmit} className="mb-8 space-y-3">
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Escribe un comentario..."
-          className="input min-h-24 w-full"
-          required
-        />
-        
-        <div className="flex items-center gap-2">
-          <input
-            type="url"
-            value={mediaUrl}
-            onChange={(e) => {
-              const val = e.target.value;
-              setMediaUrl(val);
-              setMediaType(val.toLowerCase().includes("giphy.com") || val.toLowerCase().includes("tenor.com") || val.match(/\.gif$/i) ? "gif" : val ? "image" : "");
-            }}
-            placeholder="URL de imagen o GIF opcional..."
-            className="input w-full text-sm flex-1"
+      {canPost ? (
+        <form onSubmit={handleSubmit} className="mb-8 space-y-3">
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Escribe un comentario..."
+            className="input min-h-24 w-full"
+            required
           />
-          <button
-            type="button"
-            onClick={() => {
-              setShowGifPicker(!showGifPicker);
-              if (!showGifPicker && gifResults.length === 0) searchGifs("anime");
-            }}
-            className="btn text-xs flex items-center gap-1 bg-slate-800 text-slate-200 hover:bg-slate-700 whitespace-nowrap px-3 py-2"
-          >
-            <ImageIcon size={14} /> GIFs
-          </button>
-        </div>
-
-        {showGifPicker && (
-          <div className="p-3 bg-slate-900 rounded-md border border-slate-700 space-y-3">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={gifSearchQuery}
-                onChange={(e) => setGifSearchQuery(e.target.value)}
-                onKeyDown={(e) => { 
-                  if (e.key === "Enter") { 
-                    e.preventDefault(); 
-                    searchGifs(gifSearchQuery); 
-                  } 
-                }}
-                placeholder="Busca un GIF..."
-                className="input text-xs flex-1"
-              />
-              <button
-                type="button"
-                onClick={() => searchGifs(gifSearchQuery)}
-                className="btn text-xs px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1"
-              >
-                <Search size={14} /> Buscar
-              </button>
-            </div>
-
-            {searchingGifs && <p className="text-xs text-slate-400 text-center py-2">Buscando GIFs...</p>}
-            
-            {gifResults.length > 0 && (
-              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
-                {gifResults.map((gif, i) => (
-                  <img
-                    key={i}
-                    src={gif.preview}
-                    alt="GIF"
-                    onClick={() => {
-                      setMediaUrl(gif.original);
-                      setMediaType("gif");
-                      setShowGifPicker(false);
-                    }}
-                    className="h-20 w-full object-cover rounded cursor-pointer hover:opacity-80 border border-transparent hover:border-white transition-all"
-                  />
-                ))}
-              </div>
-            )}
+          
+          <div className="flex items-center gap-2">
+            <input
+              type="url"
+              value={mediaUrl}
+              onChange={(e) => {
+                const val = e.target.value;
+                setMediaUrl(val);
+                setMediaType(val.toLowerCase().includes("giphy.com") || val.toLowerCase().includes("tenor.com") || val.match(/\.gif$/i) ? "gif" : val ? "image" : "");
+              }}
+              placeholder="URL de imagen o GIF opcional..."
+              className="input w-full text-sm flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setShowGifPicker(!showGifPicker);
+                if (!showGifPicker && gifResults.length === 0) searchGifs("anime");
+              }}
+              className="btn text-xs flex items-center gap-1 bg-slate-800 text-slate-200 hover:bg-slate-700 whitespace-nowrap px-3 py-2"
+            >
+              <ImageIcon size={14} /> GIFs
+            </button>
           </div>
-        )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button type="submit" disabled={loading} className="btn">
-          {loading ? "Enviando..." : "Comentar"}
-        </button>
-      </form>
+          {showGifPicker && (
+            <div className="p-3 bg-slate-900 rounded-md border border-slate-700 space-y-3">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={gifSearchQuery}
+                  onChange={(e) => setGifSearchQuery(e.target.value)}
+                  onKeyDown={(e) => { 
+                    if (e.key === "Enter") { 
+                      e.preventDefault(); 
+                      searchGifs(gifSearchQuery); 
+                    } 
+                  }}
+                  placeholder="Busca un GIF..."
+                  className="input text-xs flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => searchGifs(gifSearchQuery)}
+                  className="btn text-xs px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1"
+                >
+                  <Search size={14} /> Buscar
+                </button>
+              </div>
+
+              {searchingGifs && <p className="text-xs text-slate-400 text-center py-2">Buscando GIFs...</p>}
+              
+              {gifResults.length > 0 && (
+                <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
+                  {gifResults.map((gif, i) => (
+                    <img
+                      key={i}
+                      src={gif.preview}
+                      alt="GIF"
+                      onClick={() => {
+                        setMediaUrl(gif.original);
+                        setMediaType("gif");
+                        setShowGifPicker(false);
+                      }}
+                      className="h-20 w-full object-cover rounded cursor-pointer hover:opacity-80 border border-transparent hover:border-white transition-all"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button type="submit" disabled={loading} className="btn">
+            {loading ? "Enviando..." : "Comentar"}
+          </button>
+        </form>
+      ) : (
+        <p className="text-sm text-slate-400 mb-6">Inicia sesión para dejar un comentario.</p>
+      )}
 
       <div className="space-y-4">
         {comments.map((c: any) => {
@@ -223,7 +236,7 @@ export default function CommentSection({
             </div>
           );
         })}
-        {!comments.length && <p className="text-slate-400 text-sm">Sé el primero en comentar esta noticia.</p>}
+        {!comments.length && <p className="text-slate-400 text-sm">Sé el primero en comentar.</p>}
       </div>
     </section>
   );
