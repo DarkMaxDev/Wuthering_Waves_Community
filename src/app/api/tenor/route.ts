@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-// Usa tu variable de entorno en producción o el fallback para desarrollo local
 const GIPHY_KEY = process.env.GIPHY_API_KEY || "dc6zaTOxFJmzC";
 
 export async function GET(req: Request) {
@@ -21,10 +20,12 @@ export async function GET(req: Request) {
     const gifs =
       data.data
         ?.map((item: any) => ({
+          // preview para mostrar en la cuadrícula de búsqueda
           preview: item.images?.fixed_height_small?.url || item.images?.fixed_height?.url,
+          // original para guardar permanentemente en el comentario de MongoDB
           original: item.images?.fixed_height?.url || item.images?.original?.url,
         }))
-        .filter((g: any) => g.preview) || [];
+        .filter((g: any) => g.preview && g.original) || [];
 
     return NextResponse.json({ gifs });
   } catch (error) {

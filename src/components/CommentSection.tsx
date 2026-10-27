@@ -11,7 +11,8 @@ export default function CommentSection({
   comments = [], 
   canPost = true,
   meId, 
-  isAdmin = false 
+  isAdmin = false,
+  label = "Comentarios"
 }: { 
   postId?: string; 
   targetType?: string;
@@ -19,7 +20,8 @@ export default function CommentSection({
   comments?: any[]; 
   canPost?: boolean;
   meId?: string; 
-  isAdmin?: boolean; 
+  isAdmin?: boolean;
+  label?: string;
 }) {
   const router = useRouter();
   const commentTarget = postId || target;
@@ -96,7 +98,7 @@ export default function CommentSection({
 
   return (
     <section className="mt-10 border-t border-slate-800 pt-6 max-w-2xl">
-      <h3 className="text-2xl font-bold mb-4">Comentarios ({comments.length})</h3>
+      <h3 className="text-2xl font-bold mb-4">{label} ({comments.length})</h3>
 
       {canPost ? (
         <form onSubmit={handleSubmit} className="mb-8 space-y-3">
@@ -115,9 +117,9 @@ export default function CommentSection({
               onChange={(e) => {
                 const val = e.target.value;
                 setMediaUrl(val);
-                setMediaType(val.toLowerCase().includes("giphy.com") || val.toLowerCase().includes("tenor.com") || val.match(/\.gif$/i) ? "gif" : val ? "image" : "");
+                setMediaType(val.toLowerCase().includes("giphy.com") || val.match(/\.gif$/i) ? "gif" : val ? "image" : "");
               }}
-              placeholder="URL de imagen o GIF opcional..."
+              placeholder="URL de imagen opcional o selecciona un GIF..."
               className="input w-full text-sm flex-1"
             />
             <button
@@ -145,7 +147,7 @@ export default function CommentSection({
                       searchGifs(gifSearchQuery); 
                     } 
                   }}
-                  placeholder="Busca un GIF..."
+                  placeholder="Busca un GIF en Giphy..."
                   className="input text-xs flex-1"
                 />
                 <button
@@ -165,7 +167,7 @@ export default function CommentSection({
                     <img
                       key={i}
                       src={gif.preview}
-                      alt="GIF"
+                      alt="GIF de Giphy"
                       onClick={() => {
                         setMediaUrl(gif.original);
                         setMediaType("gif");
